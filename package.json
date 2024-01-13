@@ -1,0 +1,19 @@
+{
+  "name": "@anio-js-foundation/expect",
+  "version": "1.0.0",
+  "description": "A small assertion module.",
+  "main": "index.mjs",
+  "author": "Anio Software <info@anio-software.de>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anio-js-foundation/expect.git"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules ./node_modules/.bin/jest .test.mjs",
+    "prepack": "npm run test"
+  }
+}
