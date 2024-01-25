@@ -15,5 +15,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest .test.mjs",
     "prepack": "npm run test"
+  },
+  "dependencies": {
+    "@anio-js-core-foundation/is-primitive": "^1.0.0",
+    "@anio-js-core-foundation/unwrap-primitive-value": "^1.0.0"
   }
 }
