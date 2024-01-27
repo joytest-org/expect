@@ -131,7 +131,11 @@ export function createExpectationsContext() {
 
 					notToBeInstanceOf_fn.call({context}, object, value)
 					context.madeAssertions++
-				}
+				},
+				/*
+				 * toThrowError() is not implemented because the opposite of
+				 * not throwing is simply calling the function.
+				 */
 			}
 		}
 	}
