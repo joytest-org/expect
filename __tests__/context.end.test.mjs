@@ -34,5 +34,16 @@ describe("context.end", () => {
 			context.end()
 		}).toThrowError("The following error(s) ocurred:")
 	})
+
+	test("should throw if ended twice", () => {
+		const context = createExpectationsContext()
+
+		context.end()
+
+		expect(() => {
+			context.end()
+		}).toThrowError("Cannot end expectations context twice.")
+	})
+
 })
 

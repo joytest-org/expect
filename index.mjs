@@ -19,6 +19,7 @@ function throwError(msg) {
 
 export function createExpectationsContext() {
 	let context = {
+		ended: false,
 		errors: [],
 		expectedAssertions: null,
 		ignoreExpectationNotMetErrors: false,
@@ -44,58 +45,90 @@ export function createExpectationsContext() {
 		}
 	}
 
+	const checkContextEnded = (api) => {
+		if (context.ended) {
+			throw new Error(`Cannot call ${api} after context was ended. This is a bug in your code.`)
+		}
+	}
+
 	const expect = function(value) {
 		return {
 			toBe(expected) {
+				checkContextEnded("expect(value).toBe")
+
 				toBe_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toEqual(expected) {
+				checkContextEnded("expect(value).toEqual")
+
 				toEqual_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toHaveProperty(propName, propValue = undefined) {
+				checkContextEnded("expect(value).toHaveProperty")
+
 				toHaveProperty_fn.call({context}, value, propName, propValue)
 				context.madeAssertions++
 			},
 			toHaveSubString(substring) {
+				checkContextEnded("expect(value).toHaveSubString")
+
 				toHaveSubString_fn.call({context}, value, substring)
 				context.madeAssertions++
 			},
 			toThrowError(expectedErrorMessage) {
+				checkContextEnded("expect(value).toThrowError")
+
 				toThrowError_fn.call({context}, value, expectedErrorMessage)
 				context.madeAssertions++
 			},
 			toBeOfType(type) {
+				checkContextEnded("expect(value).toBeOfType")
+
 				toBeOfType_fn.call({context}, type, value)
 				context.madeAssertions++
 			},
 			toBeInstanceOf(object) {
+				checkContextEnded("expect(value).toBeInstanceOf")
+
 				toBeInstanceOf_fn.call({context}, object, value)
 				context.madeAssertions++
 			},
 			not: {
 				toBe(expected) {
+					checkContextEnded("expect(value).not.toBe")
+
 					notToBe_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toEqual(expected) {
+					checkContextEnded("expect(value).not.toEqual")
+
 					notToEqual_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toHaveProperty(propName, propValue = undefined) {
+					checkContextEnded("expect(value).not.toHaveProperty")
+
 					notToHaveProperty_fn.call({context}, value, propName, propValue)
 					context.madeAssertions++
 				},
 				toHaveSubString(substring) {
+					checkContextEnded("expect(value).not.toHaveSubString")
+
 					notToHaveSubString_fn.call({context}, value, substring)
 					context.madeAssertions++
 				},
 				toBeOfType(type) {
+					checkContextEnded("expect(value).not.toBeOfType")
+
 					notToBeOfType_fn.call({context}, type, value)
 					context.madeAssertions++
 				},
 				toBeInstanceOf(object) {
+					checkContextEnded("expect(value).not.toBeInstanceOf")
+
 					notToBeInstanceOf_fn.call({context}, object, value)
 					context.madeAssertions++
 				}
@@ -104,6 +137,8 @@ export function createExpectationsContext() {
 	}
 
 	expect.assertions = function(numAssertions) {
+		checkContextEnded("expect.assertions")
+
 		if (context.expectedAssertions !== null) {
 			return context.throw_ValidationError(
 				`You can call expect.assertions() only once per context.`
@@ -122,6 +157,12 @@ export function createExpectationsContext() {
 		},
 		expect,
 		end() {
+			if (context.ended) {
+				throw new Error(`Cannot end expectations context twice.`)
+			}
+
+			context.ended = true
+
 			if (context.expectedAssertions !== null) {
 				const {expectedAssertions, madeAssertions} = context
 
