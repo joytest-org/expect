@@ -52,6 +52,8 @@ export function createExpectationsContext() {
 	}
 
 	const expect = function(value) {
+		checkContextEnded("expect()")
+
 		return {
 			toBe(expected) {
 				checkContextEnded("expect(value).toBe")

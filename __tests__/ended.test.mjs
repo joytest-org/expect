@@ -11,6 +11,16 @@ describe("context ended", () => {
 		}).toThrowError("Cannot call expect.assertions after context was ended. This is a bug in your code.")
 	})
 
+	test("should throw if expect() is called after expectation context is ended", () => {
+		const context = createExpectationsContext()
+
+		context.end()
+
+		expect(() => {
+			context.expect(1)
+		}).toThrowError("Cannot call expect() after context was ended. This is a bug in your code.")
+	})
+
 	const methods = [
 		"toBe",
 		"toEqual",
@@ -25,10 +35,12 @@ describe("context ended", () => {
 		test(`should throw if expect(value).${method}() called after expectation context is ended`, () => {
 			const context = createExpectationsContext()
 
+			let fn = context.expect(null)[method]
+
 			context.end()
 
 			expect(() => {
-				console.log(context.expect(null)[method]())
+				fn()
 			}).toThrowError(`Cannot call expect(value).${method} after context was ended. This is a bug in your code.`)
 		})
 	}
@@ -39,10 +51,12 @@ describe("context ended", () => {
 		test(`should throw if expect(value).not.${method}() called after expectation context is ended`, () => {
 			const context = createExpectationsContext()
 
+			let fn = context.expect(null).not[method]
+
 			context.end()
 
 			expect(() => {
-				console.log(context.expect(null).not[method]())
+				fn()
 			}).toThrowError(`Cannot call expect(value).not.${method} after context was ended. This is a bug in your code.`)
 		})
 	}
