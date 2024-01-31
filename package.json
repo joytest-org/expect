@@ -21,5 +21,8 @@
   "dependencies": {
     "@anio-js-core-foundation/is-primitive": "^1.0.0",
     "@anio-js-core-foundation/unwrap-primitive-value": "^1.0.0"
-  }
+  },
+  "files": [
+    "./dist/package.mjs"
+  ]
 }
