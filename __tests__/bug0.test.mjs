@@ -1,4 +1,4 @@
-import {createExpectationsContext} from "../index.mjs"
+import {createExpectationsContext} from "../src/index.mjs"
 
 test("bug 0", () => {
 	const context = createExpectationsContext()

@@ -1,4 +1,4 @@
-import {createExpectationsContext} from "../index.mjs"
+import {createExpectationsContext} from "../src/index.mjs"
 
 describe("context ended", () => {
 	test("should throw if .assertions() is called after expectation context is ended", () => {

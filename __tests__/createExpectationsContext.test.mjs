@@ -1,4 +1,4 @@
-import {createExpectationsContext} from "../index.mjs"
+import {createExpectationsContext} from "../src/index.mjs"
 
 describe("createExpectationsContext", () => {
 	test("should return an object with expect, end and onerror properties", () => {

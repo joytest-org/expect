@@ -1,4 +1,4 @@
-import {createExpectationsContext} from "../index.mjs"
+import {createExpectationsContext} from "../src/index.mjs"
 
 describe("context.expect", () => {
 	test("should have .assertions function", () => {

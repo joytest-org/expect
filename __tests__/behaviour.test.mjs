@@ -1,4 +1,4 @@
-import {createExpectationsContext} from "../index.mjs"
+import {createExpectationsContext} from "../src/index.mjs"
 
 describe("behaviour", () => {
 	test("should throw if .assertions() is called more than once per context", () => {
