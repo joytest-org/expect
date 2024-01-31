@@ -10,7 +10,7 @@
     "url": "git+https://github.com/anio-js-foundation/expect.git"
   },
   "devDependencies": {
-    "@anio-js-foundation/bundle-package": "^2.0.0",
+    "@anio-js-foundation/bundle-package": "^2.0.1",
     "jest": "^29.7.0"
   },
   "scripts": {
