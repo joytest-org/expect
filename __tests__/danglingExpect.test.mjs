@@ -8,9 +8,7 @@ describe("dangling expect() calls", () => {
 
 		expect(() => {
 			context.end()
-		}).toThrowError(`<@anio-js-foundation/expect> By calling expect(value) you are promising to call one of its assertion methods: toBe, toEqual etc..
-The library has detected that you either forgot to call one of the assertions methods, i.e. you did expect(value) without calling .toBe etc., or you called an assertion method more than once.
-Additional information: promised assertions: 1, attempted assertions: 0.`)
+		}).toThrowError(`<@anio-js-foundation/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
 	})
 
 	test(`should throw if expect(value).not is left unused`, () => {
@@ -20,8 +18,28 @@ Additional information: promised assertions: 1, attempted assertions: 0.`)
 
 		expect(() => {
 			context.end()
-		}).toThrowError(`<@anio-js-foundation/expect> By calling expect(value) you are promising to call one of its assertion methods: toBe, toEqual etc..
-The library has detected that you either forgot to call one of the assertions methods, i.e. you did expect(value) without calling .toBe etc., or you called an assertion method more than once.
-Additional information: promised assertions: 1, attempted assertions: 0.`)
+		}).toThrowError(`<@anio-js-foundation/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
+	})
+
+	test(`should not throw if expect(value) is used more than once`, () => {
+		const context = createExpectationsContext()
+
+		let fn = context.expect(1)
+
+		fn.toBe(1)
+		fn.toEqual(1)
+
+		context.end()
+	})
+
+	test(`should not throw if expect(value).not is used more than once`, () => {
+		const context = createExpectationsContext()
+
+		let fn = context.expect(2)
+
+		fn.not.toBe(1)
+		fn.not.toEqual(1)
+
+		context.end()
 	})
 })

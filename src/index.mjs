@@ -1,3 +1,5 @@
+import createRandomIdentifier from "@anio-js-core-foundation/create-random-identifier"
+
 import toBe_fn from "./toBe.mjs"
 import toEqual_fn from "./toEqual.mjs"
 import toHaveProperty_fn from "./toHaveProperty.mjs"
@@ -23,8 +25,7 @@ export function createExpectationsContext() {
 		errors: [],
 		expectedAssertions: null,
 		ignoreExpectationNotMetErrors: false,
-		promisedAssertions: 0,
-		assertionAttempts: 0,
+		promisedAssertions: new Map(),
 		madeAssertions: 0,
 		onErrorHandler() {},
 		throw_ValidationError(message) {
@@ -54,56 +55,76 @@ export function createExpectationsContext() {
 	}
 
 	const expect = function(value) {
-		++context.promisedAssertions
+		//
+		// in order to detect "dangling" expect() calls
+		// create an entry for this particular
+		// expect() invocation and clear it once it
+		// has been used in at least one comparsion.
+		// multiple comparsions are allowed and therefore
+		// ignored.
+		//
+		let promise_id = createRandomIdentifier(16)
+
+		//
+		// flag that particular invocation as not
+		// been handled (yet), invocations to
+		// .toEqual, .toBe etc. will clear that
+		// flag
+		//
+		context.promisedAssertions.set(promise_id, true)
+
+		const clearPromiseAssertion = () => {
+			context.promisedAssertions.delete(promise_id)
+		}
 
 		checkContextEnded("expect()")
 
 		return {
 			toBe(expected) {
 				checkContextEnded("expect(value).toBe")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toBe_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toEqual(expected) {
 				checkContextEnded("expect(value).toEqual")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toEqual_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toHaveProperty(propName, propValue = undefined) {
 				checkContextEnded("expect(value).toHaveProperty")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toHaveProperty_fn.call({context}, value, propName, propValue)
 				context.madeAssertions++
 			},
 			toHaveSubString(substring) {
 				checkContextEnded("expect(value).toHaveSubString")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toHaveSubString_fn.call({context}, value, substring)
 				context.madeAssertions++
 			},
 			toThrowError(expectedErrorMessage) {
 				checkContextEnded("expect(value).toThrowError")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toThrowError_fn.call({context}, value, expectedErrorMessage)
 				context.madeAssertions++
 			},
 			toBeOfType(type) {
 				checkContextEnded("expect(value).toBeOfType")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toBeOfType_fn.call({context}, type, value)
 				context.madeAssertions++
 			},
 			toBeInstanceOf(object) {
 				checkContextEnded("expect(value).toBeInstanceOf")
-				context.assertionAttempts++
+				clearPromiseAssertion()
 
 				toBeInstanceOf_fn.call({context}, object, value)
 				context.madeAssertions++
@@ -111,42 +132,42 @@ export function createExpectationsContext() {
 			not: {
 				toBe(expected) {
 					checkContextEnded("expect(value).not.toBe")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToBe_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toEqual(expected) {
 					checkContextEnded("expect(value).not.toEqual")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToEqual_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toHaveProperty(propName, propValue = undefined) {
 					checkContextEnded("expect(value).not.toHaveProperty")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToHaveProperty_fn.call({context}, value, propName, propValue)
 					context.madeAssertions++
 				},
 				toHaveSubString(substring) {
 					checkContextEnded("expect(value).not.toHaveSubString")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToHaveSubString_fn.call({context}, value, substring)
 					context.madeAssertions++
 				},
 				toBeOfType(type) {
 					checkContextEnded("expect(value).not.toBeOfType")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToBeOfType_fn.call({context}, type, value)
 					context.madeAssertions++
 				},
 				toBeInstanceOf(object) {
 					checkContextEnded("expect(value).not.toBeInstanceOf")
-					context.assertionAttempts++
+					clearPromiseAssertion()
 
 					notToBeInstanceOf_fn.call({context}, object, value)
 					context.madeAssertions++
@@ -201,18 +222,10 @@ export function createExpectationsContext() {
 			// they are promising to call one of the
 			// comparisons: toBe, toEqual etc.
 			//
-			// It is not valid to save the resulting object
-			// of expect() to call a comparison function twice.
-			//
-			if (
-				context.promisedAssertions !==
-				context.assertionAttempts
-			) {
+			if (context.promisedAssertions.size) {
 				throwError(
-					`By calling expect(value) you are promising to call one of its assertion methods: toBe, toEqual etc..\n` +
-					`The library has detected that you either forgot to call one of the assertions methods, i.e. you did expect(value)` +
-					` without calling .toBe etc., or you called an assertion method more than once.\n` +
-					`Additional information: promised assertions: ${context.promisedAssertions}, attempted assertions: ${context.assertionAttempts}.`
+					`You have dangling or unused expect() objects. This is not allowed.` +
+					` Number of dangling calls detected: ${context.promisedAssertions.size}.`
 				)
 			}
 

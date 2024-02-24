@@ -10,6 +10,7 @@
     "url": "git+https://github.com/anio-js-foundation/expect.git"
   },
   "devDependencies": {
+    "@anio-js-core-foundation/create-random-identifier": "^1.0.1",
     "@anio-js-core-foundation/is-primitive": "^1.0.0",
     "@anio-js-core-foundation/unwrap-primitive-value": "^1.0.0",
     "@anio-js-foundation/bundle-package": "^2.0.1",
