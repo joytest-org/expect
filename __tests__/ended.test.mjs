@@ -37,7 +37,12 @@ describe("context ended", () => {
 
 			let fn = context.expect(null)[method]
 
-			context.end()
+			//
+			// this will complain about a dangling expect()
+			// which is true, but let's just swallow the error
+			// here because it is not part of the test here.
+			//
+			try { context.end() } catch {}
 
 			expect(() => {
 				fn()
@@ -53,7 +58,12 @@ describe("context ended", () => {
 
 			let fn = context.expect(null).not[method]
 
-			context.end()
+			//
+			// this will complain about a dangling expect()
+			// which is true, but let's just swallow the error
+			// here because it is not part of the test here.
+			//
+			try { context.end() } catch {}
 
 			expect(() => {
 				fn()

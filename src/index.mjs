@@ -23,6 +23,8 @@ export function createExpectationsContext() {
 		errors: [],
 		expectedAssertions: null,
 		ignoreExpectationNotMetErrors: false,
+		promisedAssertions: 0,
+		assertionAttempts: 0,
 		madeAssertions: 0,
 		onErrorHandler() {},
 		throw_ValidationError(message) {
@@ -52,47 +54,56 @@ export function createExpectationsContext() {
 	}
 
 	const expect = function(value) {
+		++context.promisedAssertions
+
 		checkContextEnded("expect()")
 
 		return {
 			toBe(expected) {
 				checkContextEnded("expect(value).toBe")
+				context.assertionAttempts++
 
 				toBe_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toEqual(expected) {
 				checkContextEnded("expect(value).toEqual")
+				context.assertionAttempts++
 
 				toEqual_fn.call({context}, expected, value)
 				context.madeAssertions++
 			},
 			toHaveProperty(propName, propValue = undefined) {
 				checkContextEnded("expect(value).toHaveProperty")
+				context.assertionAttempts++
 
 				toHaveProperty_fn.call({context}, value, propName, propValue)
 				context.madeAssertions++
 			},
 			toHaveSubString(substring) {
 				checkContextEnded("expect(value).toHaveSubString")
+				context.assertionAttempts++
 
 				toHaveSubString_fn.call({context}, value, substring)
 				context.madeAssertions++
 			},
 			toThrowError(expectedErrorMessage) {
 				checkContextEnded("expect(value).toThrowError")
+				context.assertionAttempts++
 
 				toThrowError_fn.call({context}, value, expectedErrorMessage)
 				context.madeAssertions++
 			},
 			toBeOfType(type) {
 				checkContextEnded("expect(value).toBeOfType")
+				context.assertionAttempts++
 
 				toBeOfType_fn.call({context}, type, value)
 				context.madeAssertions++
 			},
 			toBeInstanceOf(object) {
 				checkContextEnded("expect(value).toBeInstanceOf")
+				context.assertionAttempts++
 
 				toBeInstanceOf_fn.call({context}, object, value)
 				context.madeAssertions++
@@ -100,36 +111,42 @@ export function createExpectationsContext() {
 			not: {
 				toBe(expected) {
 					checkContextEnded("expect(value).not.toBe")
+					context.assertionAttempts++
 
 					notToBe_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toEqual(expected) {
 					checkContextEnded("expect(value).not.toEqual")
+					context.assertionAttempts++
 
 					notToEqual_fn.call({context}, expected, value)
 					context.madeAssertions++
 				},
 				toHaveProperty(propName, propValue = undefined) {
 					checkContextEnded("expect(value).not.toHaveProperty")
+					context.assertionAttempts++
 
 					notToHaveProperty_fn.call({context}, value, propName, propValue)
 					context.madeAssertions++
 				},
 				toHaveSubString(substring) {
 					checkContextEnded("expect(value).not.toHaveSubString")
+					context.assertionAttempts++
 
 					notToHaveSubString_fn.call({context}, value, substring)
 					context.madeAssertions++
 				},
 				toBeOfType(type) {
 					checkContextEnded("expect(value).not.toBeOfType")
+					context.assertionAttempts++
 
 					notToBeOfType_fn.call({context}, type, value)
 					context.madeAssertions++
 				},
 				toBeInstanceOf(object) {
 					checkContextEnded("expect(value).not.toBeInstanceOf")
+					context.assertionAttempts++
 
 					notToBeInstanceOf_fn.call({context}, object, value)
 					context.madeAssertions++
@@ -177,6 +194,26 @@ export function createExpectationsContext() {
 						`Expected ${expectedAssertions} assertion(s) but ${madeAssertions} assertion(s) were made.`
 					)
 				}
+			}
+
+			//
+			// whenever someone calls expect()
+			// they are promising to call one of the
+			// comparisons: toBe, toEqual etc.
+			//
+			// It is not valid to save the resulting object
+			// of expect() to call a comparison function twice.
+			//
+			if (
+				context.promisedAssertions !==
+				context.assertionAttempts
+			) {
+				throwError(
+					`By calling expect(value) you are promising to call one of its assertion methods: toBe, toEqual etc..\n` +
+					`The library has detected that you either forgot to call one of the assertions methods, i.e. you did expect(value)` +
+					` without calling .toBe etc., or you called an assertion method more than once.\n` +
+					`Additional information: promised assertions: ${context.promisedAssertions}, attempted assertions: ${context.assertionAttempts}.`
+				)
 			}
 
 			if (context.errors.length) {
