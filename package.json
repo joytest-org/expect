@@ -1,6 +1,6 @@
 {
   "name": "@joytest/expect",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Assertion module for joytest.",
   "main": "./dist/package.mjs",
   "author": "Anio Software <info@anio-software.de>",
