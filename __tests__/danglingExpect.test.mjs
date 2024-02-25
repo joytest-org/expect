@@ -8,7 +8,7 @@ describe("dangling expect() calls", () => {
 
 		expect(() => {
 			context.end()
-		}).toThrowError(`<@anio-js-foundation/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
+		}).toThrowError(`<@joytest/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
 	})
 
 	test(`should throw if expect(value).not is left unused`, () => {
@@ -18,7 +18,7 @@ describe("dangling expect() calls", () => {
 
 		expect(() => {
 			context.end()
-		}).toThrowError(`<@anio-js-foundation/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
+		}).toThrowError(`<@joytest/expect> You have dangling or unused expect() objects. This is not allowed. Number of dangling calls detected: 1.`)
 	})
 
 	test(`should not throw if expect(value) is used more than once`, () => {

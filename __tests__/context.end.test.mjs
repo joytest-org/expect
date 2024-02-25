@@ -27,7 +27,7 @@ describe("context.end", () => {
 				context.expect(1).toBe(2)
 			} catch (error) {
 				expect(error.message).toBe(
-					"<@anio-js-foundation/expect> ExpectationNotMet: Expected '1' to be '2'."
+					"<@joytest/expect> ExpectationNotMet: Expected '1' to be '2'."
 				)
 			}
 

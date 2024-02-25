@@ -10,7 +10,7 @@ export default function invert(label, fn, ...args) {
 		fn.call({context}, ...args)
 	} catch (error) {
 		if (
-			error.message.startsWith("<@anio-js-foundation/expect> ExpectationNotMet: ")
+			error.message.startsWith("<@joytest/expect> ExpectationNotMet: ")
 		) {
 			result = true
 		} else {

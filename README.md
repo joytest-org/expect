@@ -1,4 +1,4 @@
-# @anio-js-foundation/expect
+# @joytest/expect
 
 Small assertion module.
 
@@ -22,7 +22,7 @@ expect(1).not.toBe(2)
 Example usage:
 
 ```javascript
-import {createExpectationsContext} from "@anio-js-foundation/expect"
+import {createExpectationsContext} from "@joytest/expect"
 const {expect, end} = createExpectationsContext()
 
 expect(1).toBe(1)

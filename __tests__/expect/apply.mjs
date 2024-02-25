@@ -3,12 +3,12 @@ export default function(fn) {
 		context: {
 			throw_ExpectationNotMetError(message) {
 				throw new Error(
-					`<@anio-js-foundation/expect> ExpectationNotMet: ${message}`
+					`<@joytest/expect> ExpectationNotMet: ${message}`
 				)
 			},
 			throw_ValidationError(message) {
 				throw new Error(
-					`<@anio-js-foundation/expect> ValidationError: ${message}`
+					`<@joytest/expect> ValidationError: ${message}`
 				)
 			}
 		}

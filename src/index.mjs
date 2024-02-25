@@ -16,7 +16,7 @@ import notToBeOfType_fn from "./not_toBeOfType.mjs"
 import notToBeInstanceOf_fn from "./not_toBeInstanceOf.mjs"
 
 function throwError(msg) {
-	throw new Error(`<@anio-js-foundation/expect> ${msg}`)
+	throw new Error(`<@joytest/expect> ${msg}`)
 }
 
 export function createExpectationsContext() {
