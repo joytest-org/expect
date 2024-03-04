@@ -1,5 +1,5 @@
-import unwrap from "@anio-js-core-foundation/unwrap-primitive-value"
-import isPrimitive from "@anio-js-core-foundation/is-primitive"
+import unwrap from "@anio-js-foundation/unwrap-primitive-value"
+import isPrimitive from "@anio-js-foundation/is-primitive"
 import comparePrototype from "./lib/objectComparePrototype.mjs"
 import diffProperties from "./lib/objectDiffProperties.mjs"
 

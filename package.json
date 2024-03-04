@@ -3,22 +3,22 @@
   "version": "3.0.0",
   "description": "Assertion module for joytest.",
   "main": "./dist/package.mjs",
-  "author": "Anio Software <info@anio-software.de>",
+  "author": "Anio Software <info@anio.software>",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joytest-org/expect.git"
   },
   "devDependencies": {
-    "@anio-js-core-foundation/create-random-identifier": "^1.0.1",
-    "@anio-js-core-foundation/is-primitive": "^1.0.0",
-    "@anio-js-core-foundation/unwrap-primitive-value": "^1.0.0",
-    "@anio-js-foundation/bundle-package": "^2.0.1",
+    "@anio-js-foundation/create-random-identifier": "^2.0.0",
+    "@anio-js-foundation/is-primitive": "^2.0.0",
+    "@anio-js-foundation/unwrap-primitive-value": "^2.0.0",
+    "@anio-software/npm-package-bundler": "^1.0.0",
     "jest": "^29.7.0"
   },
   "scripts": {
     "test": "node --experimental-vm-modules ./node_modules/.bin/jest .test.mjs",
-    "prepare": "./node_modules/.bin/bundle-package .",
+    "prepare": "./node_modules/.bin/npm-package-bundler .",
     "prepack": "npm run test"
   },
   "files": [

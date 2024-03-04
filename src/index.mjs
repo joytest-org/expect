@@ -1,4 +1,4 @@
-import createRandomIdentifier from "@anio-js-core-foundation/create-random-identifier"
+import createRandomIdentifier from "@anio-js-foundation/create-random-identifier"
 
 import toBe_fn from "./toBe.mjs"
 import toEqual_fn from "./toEqual.mjs"

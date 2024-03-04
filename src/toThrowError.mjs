@@ -1,4 +1,4 @@
-import unwrap from "@anio-js-core-foundation/unwrap-primitive-value"
+import unwrap from "@anio-js-foundation/unwrap-primitive-value"
 
 export default function toThrowError(fn, expectedErrorMessage = undefined) {
 	const context = this.context
